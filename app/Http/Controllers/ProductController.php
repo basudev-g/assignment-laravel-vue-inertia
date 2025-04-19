@@ -32,7 +32,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        // $validated = $request->validated();
+        $validated = $request->validated();
         if($request->hasFile('image')){
             $image = $request->file('image');
             $image_name = 'image_'.time().$image->getClientOriginalExtension();
@@ -40,19 +40,12 @@ class ProductController extends Controller
             $image_path = 'storage/product_image/'.$image_name;
         }
 
-        Product::create([
-            'name' => $request->name,
-            'sku' => $request->sku,
-            'unit' => $request->unit,
-            'unit_value' => $request->unit_value,
-            'selling_price' => $request->selling_price,
-            'purchase_price' => $request->purchase_price,
-            'discount' => $request->discount,
-            'tax' => $request->tax,
-            'image' => isset($image_path) ? $image_path : null,
-        ]);
+        $validated['image'] = isset($image_path) ? $image_path : null;
 
-        return redirect()->route('products.index');
+        // Create the product
+        Product::create($validated);
+
+        return Inertia::render('Products/IndexPage');
     }
 
     /**
@@ -78,7 +71,25 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $validated = $request->validated();
+        if($request->hasFile('image')){
+            // Delete old image if exists
+            if ($product->image) {
+                $old_image_path = public_path($product->image);
+                if (file_exists($old_image_path)) {
+                    unlink($old_image_path);
+                }
+            }
+            $image = $request->file('image');
+            $image_name = 'image_'.time().$image->getClientOriginalExtension();
+            $image->storeAs('product_image', $image_name);
+            $image_path = 'storage/product_image/'.$image_name;
+        }
+
+        $validated['image'] = isset($image_path) ? $image_path : $product->image;
+        $product->update($validated);
+
+        return Inertia::render('Products/IndexPage');
     }
 
     /**

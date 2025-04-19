@@ -22,7 +22,15 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'sku' => 'required|string|max:255|unique:products,sku,' . $this->product->id,
+            'unit' => 'required|string|max:50',
+            'unit_value' => 'required|numeric|min:0',
+            'selling_price' => 'required|numeric|min:0',
+            'purchase_price' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
+            'tax' => 'nullable|numeric|min:0|max:100',
+            'image' => 'nullable|image|max:10240', // 10MB Max
         ];
     }
 }

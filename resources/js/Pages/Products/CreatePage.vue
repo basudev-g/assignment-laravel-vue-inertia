@@ -18,12 +18,21 @@ const form = useForm({
 
 function productSubmit() {
     form.post('/products', {
+        errorBag: 'createProduct',
+        preserveScroll: true,
+        forceFormData: true, // 👈 Needed for file upload!
         onSuccess: () => {
-            toaster.success('Product created successfully!');
+            form.clearErrors(),
             form.reset();
+            toaster.success('Product created successfully!');
+        },
+        onError: () => {
+            toaster.error('Failed to create product!');
         }
     });
 }
+
+form.clearErrors()
 
 </script>
 
@@ -89,7 +98,7 @@ function productSubmit() {
                 </div>
                 <div class="text-danger" v-if="form.errors.image">{{ form.errors.image }}</div>
 
-                <button type="submit" class="btn btn-primary mt-3" :disabled="form.processing">Upload</button>
+                <button type="submit" class="btn btn-primary mt-3" :disabled="form.processing">Save</button>
             </form>
         </div>
     </NavBarLayout>

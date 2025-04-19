@@ -9,6 +9,8 @@ import NProgress from 'nprogress'
 import { router } from '@inertiajs/vue3'
 import 'nprogress/nprogress.css'
 import Toaster from '@meforma/vue-toaster'
+import { ZiggyVue } from 'ziggy-js'
+import { Ziggy } from './ziggy'
 
 createInertiaApp({
 resolve: name => {
@@ -19,7 +21,8 @@ setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) })
     app.use(plugin)
     app.use(Toaster)
-    app.component('EasyDataTable', Vue3EasyDataTable);
+    app.component('EasyDataTable', Vue3EasyDataTable)
+    app.use(ZiggyVue, Ziggy)
     app.mount(el)
 },
 })

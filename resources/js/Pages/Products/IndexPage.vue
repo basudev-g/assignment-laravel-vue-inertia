@@ -1,6 +1,7 @@
 <script setup>
 import NavBarLayout from '@/Layout/NavBarLayout.vue';
 // import type { Header, Item } from 'vue3-easy-data-table';
+import { Link } from '@inertiajs/vue3';
 
 defineProps({
     products: {
@@ -60,7 +61,7 @@ defineProps({
                                     <img :src="product.image" alt="Product Image" class="img-fluid" style="width: 50px; height: 50px;">
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary me-2">Edit</button>
+                                    <Link class="btn btn-primary me-2" :href="route('products.edit', product.id)">Edit</Link>
                                     <button class="btn btn-danger">Delete</button>
                                 </td>
                             </tr>
